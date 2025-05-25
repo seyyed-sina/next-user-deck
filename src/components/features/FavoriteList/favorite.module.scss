@@ -1,0 +1,15 @@
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-gray-500);
+  padding: 2rem;
+}
+
+.count {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--color-gray-500);
+}

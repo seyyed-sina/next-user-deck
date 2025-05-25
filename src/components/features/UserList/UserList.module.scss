@@ -1,0 +1,58 @@
+.user-list {
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+}
+
+.container {
+  height: 100%;
+  overflow: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem 0;
+
+  @media screen and (min-width: 768px) {
+    padding: 2rem 0;
+  }
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 1rem;
+
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.loadingCard {
+  min-height: 148px;
+}
+
+.last,
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.875rem;
+  padding: 1rem;
+}
+
+.last {
+  color: var(--color-gray-300);
+}
+
+.error {
+  color: var(--color-red);
+}

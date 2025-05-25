@@ -1,5 +1,10 @@
 import { UserList } from "@/components/features/UserList/UserList";
+import { Suspense } from "react";
 
 export default function Home() {
-  return <UserList />;
+  return (
+    <Suspense>
+      <UserList />
+    </Suspense>
+  );
 }

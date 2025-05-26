@@ -1,5 +1,5 @@
 import { queryKey } from "@/constants/query-key";
-import { fetchUsers } from "@/services/users";
+import { fetchUsers } from "@/services/user";
 import { useUserStore } from "@/store/user-favorite/user-favorite.slice";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
@@ -18,9 +18,10 @@ export const useUsers = () => {
     queryKey: [queryKey.USERS, nationalityFilter, genderFilter],
     queryFn: ({ pageParam }) =>
       fetchUsers({
-        pageParam,
-        nationality: nationalityFilter || undefined,
+        page: pageParam.toString() || "1",
+        nat: nationalityFilter || undefined,
         gender: genderFilter || undefined,
+        results: "10",
       }),
     getNextPageParam: (lastPage) => lastPage.info.page + 1,
     initialPageParam: 1,

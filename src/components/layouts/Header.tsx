@@ -1,12 +1,15 @@
 "use client";
 import { routes } from "@/constants/routes";
-import styles from "@/styles/partials/header.module.scss";
 import { clx } from "@/utils/styles";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LucidIcon } from "../common/LucidIcon";
+import styles from "@/styles/partials/header.module.scss";
+import { useUserStore } from "@/store/user-favorite/user-favorite.slice";
+import { useShallow } from "zustand/react/shallow";
+import { DownloadButton } from "../features/UserList/DownloadButton";
 
 export const Header = () => {
+  const visibleUsers = useUserStore(useShallow((state) => state.visibleUsers));
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path;
 
@@ -38,11 +41,7 @@ export const Header = () => {
               </Link>
             </li>
           </ul>
-
-          <button type="button" className={styles.export}>
-            Download User List
-            <LucidIcon name="download" size={20} strokeWidth={1.5} />
-          </button>
+          {pathname === routes.ROOT && <DownloadButton users={visibleUsers} />}
         </nav>
       </div>
     </header>

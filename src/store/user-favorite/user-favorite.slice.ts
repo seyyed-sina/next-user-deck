@@ -4,6 +4,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 
 const initialState: FavoriteState = {
   favorites: [],
+  visibleUsers: [],
   nameFilter: "",
   nationalityFilter: "",
   genderFilter: null,
@@ -27,6 +28,7 @@ export const useUserStore = create<FavoriteStore>()(
         set({ nationalityFilter: nationality }),
       setGenderFilter: (gender) => set({ genderFilter: gender }),
       setName: (name) => set({ nameFilter: name }),
+      setVisibleUsers: (users) => set({ visibleUsers: users }),
     }),
     {
       name: "user-favorites",

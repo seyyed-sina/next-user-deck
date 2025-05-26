@@ -4,7 +4,8 @@ export interface FavoriteState {
   favorites: User[];
   nationalityFilter: string;
   genderFilter: string | null;
-  nameFilter: string
+  nameFilter: string;
+  visibleUsers: User[];
 }
 
 export interface FavoriteAction {
@@ -14,6 +15,7 @@ export interface FavoriteAction {
   setName: (name: string) => void;
   setNationalityFilter: (nationality: string) => void;
   setGenderFilter: (gender: string | null) => void;
+  setVisibleUsers: (users: User[]) => void;
 }
 
 export type FavoriteStore = FavoriteState & FavoriteAction;

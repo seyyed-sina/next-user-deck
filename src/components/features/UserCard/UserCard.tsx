@@ -5,6 +5,7 @@ import { clx } from "@/utils/styles";
 import { LucidIcon } from "../../common/LucidIcon";
 import { capitalize, formatAddress } from "@/utils/formatter";
 import styles from "./UserCard.module.scss";
+import Link from "next/link";
 
 interface UserCardProps {
   user: User;
@@ -26,7 +27,7 @@ export const UserCard = ({ user, index }: UserCardProps) => {
   return (
     <div className={styles.card}>
       <div className={styles.index}>{index + 1}</div>
-      <div className={styles.avatar}>
+      <Link href={`/users/${user.login.uuid}`} className={styles.avatar}>
         <Image
           src={user.picture.medium}
           alt={`${user.name.first} ${user.name.last}`}
@@ -34,11 +35,13 @@ export const UserCard = ({ user, index }: UserCardProps) => {
           width={42}
           height={42}
         />
-      </div>
+      </Link>
       <div className={styles.content}>
         <div className={styles.name__wrapper}>
           <h2 className={styles.name}>
-            {user.name.first} {user.name.last}
+            <Link href={`/users/${user.login.uuid}`}>
+              {user.name.first} {user.name.last}
+            </Link>
           </h2>
           <span className={styles.username}>
             {user.login.username} / {capitalize(user.gender)}
@@ -66,7 +69,11 @@ export const UserCard = ({ user, index }: UserCardProps) => {
           </span>
         </div>
       </div>
-      <div className={styles.flag}>
+      <div
+        className={styles.flag}
+        title={user.location.country}
+        aria-label={user.location.country}
+      >
         <Image
           src={`https://flagcdn.com/w20/${user.nat.toLowerCase()}.png`}
           alt={`${user.nat} flag`}
@@ -80,6 +87,7 @@ export const UserCard = ({ user, index }: UserCardProps) => {
         aria-label={
           isUserFavorite ? "Remove from favorites" : "Add to favorites"
         }
+        title={isUserFavorite ? "Remove from favorites" : "Add to favorites"}
         className={clx(
           styles.favorite_btn,
           isUserFavorite && styles.favorite_btn_active,

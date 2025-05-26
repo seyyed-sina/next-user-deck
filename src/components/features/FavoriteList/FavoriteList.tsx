@@ -14,7 +14,7 @@ export const FavoriteList = () => {
 
   const rowVirtualizer = useWindowVirtualizer({
     count: favorites.length,
-    estimateSize: () => 148,
+    estimateSize: () => 156,
     overscan: 5,
     scrollMargin: parentRef.current?.offsetTop ?? 0,
   });
@@ -25,7 +25,12 @@ export const FavoriteList = () => {
     if (!lastItem) {
       return;
     }
-  }, [favorites.length, rowVirtualizer.getVirtualItems(), rowVirtualizer]);
+  }, [
+    favorites.length,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    rowVirtualizer.getVirtualItems(),
+    rowVirtualizer,
+  ]);
 
   return (
     <div ref={parentRef} className={userListStyles.container}>

@@ -1,30 +1,46 @@
 "use client";
-import { FC, useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useUsers } from "@/hooks/use-users";
 import { UserCard } from "../UserCard/UserCard";
 import { LoadingSpinner } from "../../common/loading/LoadingSpinner";
 import { Filters } from "../Filters/Filters";
+import type { User } from "@/types";
+import { useUserStore } from "@/store/user-favorite/user-favorite.slice";
 import { UserCardLoading } from "../UserCard/UserCardLoading";
 import styles from "./UserList.module.scss";
 
-export const UserList: FC = () => {
+export const UserList = () => {
   const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useUsers();
 
-  const allUsers = data ? data.pages.flatMap((page) => page.results) : [];
+  const setVisibleUsers = useUserStore((state) => state.setVisibleUsers);
+
+  const allUsers = useMemo(
+    () => (data ? data.pages.flatMap((page) => page.results) : []),
+    [data],
+  );
 
   const parentRef = useRef<HTMLDivElement>(null);
+  const currentUsersRef = useRef<User[]>([]);
 
-  const rowVirtualizer = useWindowVirtualizer({
+  const virtualizer = useWindowVirtualizer({
     count: hasNextPage ? allUsers.length + 1 : allUsers.length,
-    estimateSize: () => 148,
+    estimateSize: () => 156,
     overscan: 5,
     scrollMargin: parentRef.current?.offsetTop ?? 0,
   });
 
   useEffect(() => {
-    const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
+    const virtualItems = virtualizer.getVirtualItems();
+    currentUsersRef.current = virtualItems
+      .filter((item) => item.index < allUsers.length)
+      .map((item) => allUsers[item.index]);
+    setVisibleUsers(currentUsersRef.current);
+  }, [allUsers, virtualizer, setVisibleUsers]);
+
+  useEffect(() => {
+    const [lastItem] = [...virtualizer.getVirtualItems()].reverse();
 
     if (!lastItem) {
       return;
@@ -42,8 +58,9 @@ export const UserList: FC = () => {
     fetchNextPage,
     allUsers.length,
     isFetchingNextPage,
-    rowVirtualizer.getVirtualItems(),
-    rowVirtualizer,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    virtualizer.getVirtualItems(),
+    virtualizer,
   ]);
 
   if (status === "error")
@@ -62,13 +79,13 @@ export const UserList: FC = () => {
 
       <div
         style={{
-          height: `${rowVirtualizer.getTotalSize()}px`,
+          minHeight: `${virtualizer.getTotalSize()}px`,
           width: "100%",
           position: "relative",
         }}
       >
         {status === "success" &&
-          rowVirtualizer.getVirtualItems().map((virtualRow) => {
+          virtualizer.getVirtualItems().map((virtualRow) => {
             const isLoaderRow = virtualRow.index > allUsers.length - 1;
             const user = allUsers[virtualRow.index];
 
@@ -83,7 +100,7 @@ export const UserList: FC = () => {
                   width: "100%",
                   height: `${virtualRow.size}px`,
                   transform: `translateY(${
-                    virtualRow.start - rowVirtualizer.options.scrollMargin
+                    virtualRow.start - virtualizer.options.scrollMargin
                   }px)`,
                 }}
               >
